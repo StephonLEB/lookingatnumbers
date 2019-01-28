@@ -1,5 +1,5 @@
 theme = "hyde-x"
-baseURL = "https://friendly-rosalind-bca0d5.netlify.com/"
+baseURL = "https://lookingatnumbers.com/"
 languageCode = "en-us"
 title = "Looking at Numbers"
 relativeUrls = true
