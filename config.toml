@@ -2,7 +2,7 @@ theme = "hyde-x"
 baseURL = "http://lookingatnumbers.com/"
 languageCode = "en-us"
 title = "Looking at Numbers"
-relativeUrls = true
+
 [author]
 name="Stephon Beaufort"
 
