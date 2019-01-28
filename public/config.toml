@@ -1,5 +1,5 @@
 theme = "hyde-x"
-baseURL = "http://lookingatnumbers.com/"
+baseURL = "lookingatnumbers.com/"
 languageCode = "en-us"
 title = "Looking at Numbers"
 
