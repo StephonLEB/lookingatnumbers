@@ -1,5 +1,5 @@
 theme = "hyde-x"
-baseURL = "https://lookingatnumbers.com/"
+baseURL = "http://lookingatnumbers.com/"
 languageCode = "en-us"
 title = "Looking at Numbers"
 relativeUrls = true
