@@ -1,0 +1,70 @@
+---
+title: "Getting Author-level blog performance from Google Analytics"
+author: "Stephon Beaufort"
+date: 2019-01-20T21:13:14-05:00
+categories: ["R"]
+tags: ["Google Analytics", "Web Scraping"]
+---
+```{r echo=FALSE, message=FALSE}
+library(googleAnalyticsR)
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, results = FALSE)
+ga_auth("rmd.auth")
+ga_id <- 1834906 #alloy
+range <- c("2018-01-01","2018-12-31")
+```
+
+Blogging has become common practice among businesses looking to connect with their customers. Behind every blogging operation though is a team of authors full of industry knowhow. Giving writers a way to track their performance can compel them to write better and more often. Using R and Google Analytics, I was able to aggregate blog traffic for my coworkers. Google Analytics is a commonly used tool for tracking site usage, and the **googleAnalyticsR** package is a great API wrapper for getting its data into R. GA has important metrics for individual web pages, but doesn't have information identifying the author of a post. This makes aggregating blogs by author a pain, particularly for companies who have hundreds of blog posts around the web. 
+
+
+```{r, message=FALSE, echo=TRUE}
+library(tidyverse)
+library(rvest)
+library(googleAnalyticsR)
+ga_auth()
+```
+
+We start by querying the Google Analytics data we want. Here, the only metrics I want to see are sessions for each blog. Luckily, our url structure is such that every blog has "blog/" in its url.
+
+```{r}
+organic <- segment_ga4("organic",segment_id = "gaid::-5")
+dim <- dim_filter("landingPagePath","REGEXP","blog/") %>% list() %>% filter_clause_ga4()
+pages <- google_analytics(ga_id, #your id here
+                 date_range = range, #your date range
+                 dimensions = c("landingPagePath"),
+                 metrics = c("sessions"),
+                 dim_filters = dim,
+                 segments = organic)
+```
+
+Google Analytics will return a list of url paths. We want to append them to the host name to get the author name from the url. 
+
+```{r}
+pages <- pages %>% mutate(page = paste0("https://www.alloymagnetic.com",landingPagePath))
+```
+
+To retrieve the the author names, the **rvest** package comes in handy. It's generally useful for adding context to standard reports. The author can be identified by its CSS selector.
+
+```{r}
+pages <- pages %>% mutate(author = map(page,~try(read_html(.) %>% 
+                                           html_node("span.author") %>% 
+                                           html_text())) %>% unlist())
+```
+
+It's likely that you'll get status errors for some of the pages, particularly if some of your blogs have been unpublished in your chosen range. 
+
+Finally, we group the landing page traffic by author to get our list of writers.
+
+```{r, results=TRUE}
+ authors <- pages %>% group_by(author) %>% summarise(sessions = sum(sessions),
+                                         `# of blogs` = n()) %>%
+  filter(!str_detect(author, "404")) %>%
+  mutate(author = str_remove(author, " by ")) %>%
+  arrange(desc(sessions))
+
+authors %>% 
+  mutate(name = starwars[1:12,]$name) %>% 
+  select(name,2,3,-author) %>% kable() #Protecting author identity
+
+```
+

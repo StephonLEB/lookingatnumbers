@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Looking at Numbers</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on Looking at Numbers</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 20 Jan 2019 21:13:14 -0500</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Getting Author-level blog performance from Google Analytics</title>
+      <link>/post/wow/</link>
+      <pubDate>Sun, 20 Jan 2019 21:13:14 -0500</pubDate>
+      
+      <guid>/post/wow/</guid>
+      <description>Blogging has become common practice among businesses looking to connect with their customers. Behind every blogging operation though is a team of authors full of industry knowhow. Giving writers a way to track their performance can compel them to write better and more often. Using R and Google Analytics, I was able to aggregate blog traffic for my coworkers. Google Analytics is a commonly used tool for tracking site usage, and the googleAnalyticsR package is a great API wrapper for getting its data into R.</description>
+    </item>
+    
+  </channel>
+</rss>
