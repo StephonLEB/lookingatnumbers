@@ -1,0 +1,16 @@
+theme = "hyde-x"
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "Looking at Numbers"
+relativeUrls = true
+[author]
+name="Stephon Beaufort"
+
+[params]
+
+hideReadingTime="true"
+github="https://github.com/StephonLEB"
+twitter="https://twitter.com/SLEBeaufort"
+linkedin="https://www.linkedin.com/in/stephon-beaufort-299b05111/"
+home="Looking at Numbers"
+customCSS = "/css/shit.css"
