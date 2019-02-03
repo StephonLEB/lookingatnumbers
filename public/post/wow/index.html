@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Getting Author-level blog performance from Google Analytics &middot; Stephon Beaufort</title>
+
+  
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/hyde.css">
+  <link rel="stylesheet" href="/css/poole-overrides.css">
+  <link rel="stylesheet" href="/css/hyde-overrides.css">
+  <link rel="stylesheet" href="/css/hyde-x.css">
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/shit.css">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link href="/favicon.png" rel="icon">
+
+  
+  
+  
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  
+</head>
+<body>
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      
+      <h1>Stephon Beaufort</h1>
+      
+    </div>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="/">Looking at Numbers</a></li>
+      <li class="sidebar-nav-item"><a href="/about">About Me</a></li>
+      
+    </ul>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item">
+      <a href="https://github.com/StephonLEB"><i class="fa fa-github-square fa-3x"></i></a>
+      
+      
+      <a href="https://www.linkedin.com/in/stephon-beaufort-299b05111/"><i class="fa fa-linkedin-square fa-3x"></i></a>
+      
+      
+      <a href="https://twitter.com/SLEBeaufort"><i class="fa fa-twitter-square fa-3x"></i></a>
+      
+      
+      </li>
+    </ul>
+
+    
+
+    <p>Copyright &copy; 2019 <a href="/license/">License</a><br/>
+       Powered by <a href="http://gohugo.io">Hugo</a> and <a href="https://github.com/zyro/hyde-x">Hyde-X</a></p>
+
+  </div>
+</div>
+
+
+<div class="content container">
+  <div class="post">
+    <h1 class="post-title">Getting Author-level blog performance from Google Analytics</h1>
+    <span class="post-date">Jan 20, 2019
+    
+    <br/>
+    <a class="label" href="/categories/r">R</a>
+    </span>
+    <p>Blogging has become common practice among businesses looking to connect with their customers. Behind every blogging operation though is a team of authors full of industry knowhow. Giving writers a way to track their performance can compel them to write better and more often. Using R and Google Analytics, I was able to aggregate blog traffic for my coworkers. Google Analytics is a commonly used tool for tracking site usage, and the <strong>googleAnalyticsR</strong> package is a great API wrapper for getting its data into R. GA has important metrics for individual web pages, but doesn’t have information identifying the author of a post. This makes aggregating blogs by author a pain, particularly for companies who have hundreds of blog posts around the web.</p>
+<pre class="r"><code>library(tidyverse)
+library(rvest)
+library(googleAnalyticsR)
+ga_auth()</code></pre>
+<p>We start by querying the Google Analytics data we want. Here, the only metrics I want to see are sessions for each blog. Luckily, our url structure is such that every blog has “blog/” in its url.</p>
+<pre class="r"><code>organic &lt;- segment_ga4(&quot;organic&quot;,segment_id = &quot;gaid::-5&quot;)
+dim &lt;- dim_filter(&quot;landingPagePath&quot;,&quot;REGEXP&quot;,&quot;blog/&quot;) %&gt;% list() %&gt;% filter_clause_ga4()
+pages &lt;- google_analytics(ga_id, #your id here
+                 date_range = range, #your date range
+                 dimensions = c(&quot;landingPagePath&quot;),
+                 metrics = c(&quot;sessions&quot;),
+                 dim_filters = dim,
+                 segments = organic)</code></pre>
+<p>Google Analytics will return a list of url paths. We want to append them to the host name to get the author name from the url.</p>
+<pre class="r"><code>pages &lt;- pages %&gt;% mutate(page = paste0(&quot;https://www.alloymagnetic.com&quot;,landingPagePath))</code></pre>
+<p>To retrieve the the author names, the <strong>rvest</strong> package comes in handy. It’s generally useful for adding context to standard reports. The author can be identified by its CSS selector.</p>
+<pre class="r"><code>pages &lt;- pages %&gt;% mutate(author = map(page,~try(read_html(.) %&gt;% 
+                                           html_node(&quot;span.author&quot;) %&gt;% 
+                                           html_text())) %&gt;% unlist())</code></pre>
+<p>It’s likely that you’ll get status errors for some of the pages, particularly if some of your blogs have been unpublished in your chosen range.</p>
+<p>Finally, we group the landing page traffic by author to get our list of writers.</p>
+<pre class="r"><code> authors &lt;- pages %&gt;% group_by(author) %&gt;% summarise(sessions = sum(sessions),
+                                         `# of blogs` = n()) %&gt;%
+  filter(!str_detect(author, &quot;404&quot;)) %&gt;%
+  mutate(author = str_remove(author, &quot; by &quot;)) %&gt;%
+  arrange(desc(sessions))
+
+authors %&gt;% 
+  mutate(name = starwars[1:12,]$name) %&gt;% 
+  select(name,2,3,-author) %&gt;% kable() #Protecting author identity</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">name</th>
+<th align="right">sessions</th>
+<th align="right"># of blogs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Luke Skywalker</td>
+<td align="right">1530</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">C-3PO</td>
+<td align="right">1519</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">R2-D2</td>
+<td align="right">644</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Darth Vader</td>
+<td align="right">378</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Leia Organa</td>
+<td align="right">303</td>
+<td align="right">22</td>
+</tr>
+<tr class="even">
+<td align="left">Owen Lars</td>
+<td align="right">246</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">Beru Whitesun lars</td>
+<td align="right">175</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">R5-D4</td>
+<td align="right">137</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Biggs Darklighter</td>
+<td align="right">96</td>
+<td align="right">5</td>
+</tr>
+<tr class="even">
+<td align="left">Obi-Wan Kenobi</td>
+<td align="right">12</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Anakin Skywalker</td>
+<td align="right">8</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">Wilhuff Tarkin</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+
+  </div>
+  
+</div>
+
+
+
+
+
+</body>
+</html>
+
