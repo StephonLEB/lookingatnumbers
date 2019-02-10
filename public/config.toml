@@ -13,4 +13,13 @@ github="https://github.com/StephonLEB"
 twitter="https://twitter.com/SLEBeaufort"
 linkedin="https://www.linkedin.com/in/stephon-beaufort-299b05111/"
 home="Looking at Numbers"
+googleAnalytics = "<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-134212685-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-134212685-1');
+</script>"
 customCSS = "/css/shit.css"
