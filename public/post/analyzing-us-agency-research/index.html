@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>Analyzing US Research and Development Spending for Tidy Tuesday and SWD Challenge &middot; Stephon Beaufort</title>
+
+  
+  <link rel="stylesheet" href="/css/poole.css">
+  <link rel="stylesheet" href="/css/hyde.css">
+  <link rel="stylesheet" href="/css/poole-overrides.css">
+  <link rel="stylesheet" href="/css/hyde-overrides.css">
+  <link rel="stylesheet" href="/css/hyde-x.css">
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,700|Abril+Fatface">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/shit.css">
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/touch-icon-144-precomposed.png">
+  <link href="/favicon.png" rel="icon">
+
+  
+  
+  
+  
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-134212685-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+  
+</head>
+<body>
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      
+      <h1>Stephon Beaufort</h1>
+      
+    </div>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item"><a href="/">Looking at Numbers</a></li>
+      <li class="sidebar-nav-item"><a href="/about">About Me</a></li>
+      
+    </ul>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item">
+      <a href="https://github.com/StephonLEB"><i class="fa fa-github-square fa-3x"></i></a>
+      
+      
+      <a href="https://www.linkedin.com/in/stephon-beaufort-299b05111/"><i class="fa fa-linkedin-square fa-3x"></i></a>
+      
+      
+      <a href="https://twitter.com/SLEBeaufort"><i class="fa fa-twitter-square fa-3x"></i></a>
+      
+      
+      </li>
+    </ul>
+
+    
+
+    <p>Copyright &copy; 2019 <a href="/license/">License</a><br/>
+       Powered by <a href="http://gohugo.io">Hugo</a> and <a href="https://github.com/zyro/hyde-x">Hyde-X</a></p>
+
+  </div>
+</div>
+
+
+<div class="content container">
+  <div class="post">
+    <h1 class="post-title">Analyzing US Research and Development Spending for Tidy Tuesday and SWD Challenge</h1>
+    <span class="post-date">Feb 10, 2019
+    
+    <br/>
+    
+    </span>
+    <p>I’m attempting to kill two birds (or two twitter hashtags) with one stone here. This is my first attempt at analyzing a weekly #tidytuesday data set; additonally, it’s my first go at the the monthly #swdchallenge.
+<br></p>
+<div id="tidytuesday" class="section level2">
+<h2>#TidyTuesday</h2>
+<p>The data for week 7 of Tidy Tuesday is a group of datasets that detail US federal research and development spending by agency.</p>
+<pre><code>## [1] &quot;department&quot;            &quot;year&quot;                  &quot;rd_budget&quot;            
+## [4] &quot;total_outlays&quot;         &quot;discretionary_outlays&quot; &quot;gdp&quot;</code></pre>
+<p>With there only being a a handful of features of the dataset, I thought first to see how R&amp;D spending changed throughout time.</p>
+<p><img src="/post/2019-02-10-analyzing-us-research-and-development-spending_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The first year for this data is 1976, and there are some clear trends here. Agencies like the NSF and HHS has have spent more and more since the 1980s, while agencies like the EPA and USDA have had a decline, particularly since 2000.</p>
+<p>It’s easy to wonder how much partisan influence there might be on budget decisions, so I brought in presidents as a new variable.</p>
+<p><img src="/post/2019-02-10-analyzing-us-research-and-development-spending_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Some new inferences can be made here. Namely, large increases in defense(DOD) R&amp;D spending have occured during republican presidencies.</p>
+</div>
+<div id="swdchallenge" class="section level2">
+<h2>#SWDChallenge</h2>
+<p>The Storytelling with Data challenge has to do with taking new approaches to vizualizing data. This month’s challenge was to vizualize the variance in a data set.</p>
+<p><img src="/post/2019-02-10-analyzing-us-research-and-development-spending_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>In spite of the R&amp;D spending fluctuation that occurs across these government agencies, the majority haven’t seen a wide spread in spending between 1976 and 2017. This is not the case for agencies like DOD, HHS and NIH, who have see spreads of 50 Billion USD in research &amp; development spending across 40 years.</p>
+</div>
+
+  </div>
+  
+</div>
+
+
+
+
+
+</body>
+</html>
+

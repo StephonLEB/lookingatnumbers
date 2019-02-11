@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Looking at Numbers</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 20 Jan 2019 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Sun, 10 Feb 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Analyzing US Research and Development Spending for Tidy Tuesday and SWD Challenge</title>
+      <link>/post/analyzing-us-agency-research/</link>
+      <pubDate>Sun, 10 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/analyzing-us-agency-research/</guid>
+      <description>I’m attempting to kill two birds (or two twitter hashtags) with one stone here. This is my first attempt at analyzing a weekly #tidytuesday data set; additonally, it’s my first go at the the monthly #swdchallenge. #TidyTuesday The data for week 7 of Tidy Tuesday is a group of datasets that detail US federal research and development spending by agency.
+## [1] &amp;quot;department&amp;quot; &amp;quot;year&amp;quot; &amp;quot;rd_budget&amp;quot; ## [4] &amp;quot;total_outlays&amp;quot; &amp;quot;discretionary_outlays&amp;quot; &amp;quot;gdp&amp;quot; With there only being a a handful of features of the dataset, I thought first to see how R&amp;amp;D spending changed throughout time.</description>
+    </item>
     
     <item>
       <title>Getting Author-level blog performance from Google Analytics</title>

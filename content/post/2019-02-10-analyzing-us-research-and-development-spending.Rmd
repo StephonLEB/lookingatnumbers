@@ -1,0 +1,86 @@
+---
+title: Analyzing US Research and Development Spending for Tidy Tuesday and SWD Challenge
+author: ~
+date: '2019-02-10'
+slug: analyzing-us-agency-research
+categories: []
+tags: []
+description: ''
+keywords: []
+---
+
+I'm attempting to kill two birds (or two twitter hashtags) with one stone here. This is my first attempt at analyzing a weekly #tidytuesday data set; additonally, it's my first go at the the monthly #swdchallenge. 
+<br>
+
+## \#TidyTuesday
+
+The data for week 7 of Tidy Tuesday is a group of datasets that detail US federal research and development spending by agency. 
+
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
+library(tidyverse)
+library(scales)
+fed_rd <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-02-12/fed_r_d_spending.csv")
+fed_rd %>% names()
+```
+
+With there only being a a handful of features of the dataset, I thought first to see how R&D spending changed throughout time.
+
+```{r,message=FALSE,echo=FALSE,fig.height=7}
+fed_rd %>% ggplot(aes(year,rd_budget)) + geom_line() + facet_wrap(~department,scales = "free_y",ncol = 2) + 
+  scale_y_continuous(labels = dollar_format())
+```
+
+The first year for this data is 1976, and there are some clear trends here. Agencies like the NSF and HHS has have spent more and more since the 1980s, while agencies like the EPA and USDA have had a decline, particularly since 2000.
+
+It's easy to wonder how much partisan influence there might be on budget decisions, so I brought in presidents as a new variable.
+
+```{r, message=FALSE,echo=FALSE,fig.height=7}
+fed_rd_pres <- fed_rd %>% 
+  mutate(pres = case_when(year<1978 ~ "Gerald Ford",
+                                                  between(year,1977,1980) ~ "Jimmy Carter",
+                                                  between(year,1981,1988) ~ "Ronald Reagan",
+                                                  between(year,1989,1992) ~ "George HW Bush",
+                                                  between(year,1993,2000) ~ "Bill Clinton",
+                                                  between(year,2001,2008) ~ "George W Bush",
+                                                  between(year,2009,2016) ~ "Barack Obama",
+                                                  year>2016 ~ "Donald Trump"))
+
+fed_rd_pres %>% 
+  ggplot(aes(year,rd_budget,color=pres)) + 
+  geom_line() + 
+  facet_wrap(~department,scales = "free_y",ncol = 2) + 
+  scale_y_continuous(labels = dollar_format(scale=1/1e9,suffix = " B",prefix = "")) + 
+  scale_color_manual(values = c("blue","blue","red","red","red","red","blue","red")) + 
+  theme_light() + 
+  labs(y= "R&D Budget (in Billions USD)",x=NULL,color = "President")
+```
+
+Some new inferences can be made here. Namely, large increases in defense(DOD) R&D spending have occured during republican presidencies.
+
+## \#SWDChallenge
+
+The Storytelling with Data challenge has to do with taking new approaches to vizualizing data. This month's challenge was to vizualize the variance in a data set. 
+
+```{r,echo=FALSE}
+fed_rd_pres %>% 
+  group_by(department) %>% 
+  filter(rd_budget>0) %>% 
+  mutate(mean = mean(rd_budget),sd = sd(rd_budget)) %>% 
+  arrange(desc(sd)) %>%
+  ggplot(aes(fct_reorder(department,sd),rd_budget,color=pres)) + 
+  geom_jitter(shape=1,width=0.20,height=0) + coord_flip() + theme_light() + 
+  scale_y_continuous(breaks = seq(from=0,to=90e9,length.out = 10),
+                     labels = comma_format(scale=1/1e9,
+                                            suffix = " B",
+                                            prefix = "")) +
+  scale_color_manual(values = c("blue","blue","red","red","red","red","blue","red")) + 
+  labs(x="Government Agency",
+       y="R&D Spending (in Billions USD)",
+       title="R&D spending has remained steady for most government entities since 1976",
+       subtitle = "DOD, HHS, and NIH have seen higher variance in their budgets",
+       color="President") + 
+  theme(axis.title = element_text(hjust = 1))
+```
+
+In spite of the R&D spending fluctuation that occurs across these government agencies, the majority haven't seen a wide spread in spending between 1976 and 2017. This is not the case for agencies like DOD, HHS and NIH, who have see spreads of 50 Billion USD in research & development spending across 40 years. 
+
