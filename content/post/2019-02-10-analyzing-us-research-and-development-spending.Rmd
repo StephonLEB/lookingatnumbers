@@ -84,3 +84,4 @@ fed_rd_pres %>%
 
 In spite of the R&D spending fluctuation that occurs across these government agencies, the majority haven't seen a wide spread in spending between 1976 and 2017. This is not the case for agencies like DOD, HHS and NIH, who have see spreads of 50 Billion USD in research & development spending across 40 years. 
 
+The code for this blog can be found [here](https://github.com/StephonLEB/lookingatnumbers/blob/master/content/post/2019-02-10-analyzing-us-research-and-development-spending.Rmd)
