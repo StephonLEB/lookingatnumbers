@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/post/exploring-bell-tower-celebrations-r/</loc>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/analyzing-us-agency-research/</loc>
     <lastmod>2019-02-10T00:00:00+00:00</lastmod>
   </url>
@@ -25,19 +30,19 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2019-02-10T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/post/</loc>
-    <lastmod>2019-02-10T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/categories/r/</loc>
-    <lastmod>2019-01-20T21:13:14-05:00</lastmod>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -50,6 +55,12 @@
   <url>
     <loc>/tags/web-scraping/</loc>
     <lastmod>2019-01-20T21:13:14-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/categories/web-scraping/</loc>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

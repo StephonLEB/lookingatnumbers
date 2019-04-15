@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Looking at Numbers</title>
+    <link>/tags/r/</link>
+    <description>Recent content in R on Looking at Numbers</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 10 Apr 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Light It Red: Exploring Bell Tower Celebrations with R</title>
+      <link>/post/exploring-bell-tower-celebrations-r/</link>
+      <pubDate>Wed, 10 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/exploring-bell-tower-celebrations-r/</guid>
+      <description>NC State Bell Tower Among the sights to see when taking a trip to Raleigh is NC State&amp;rsquo;s iconic belltower. Erected as a monument to honor fallen soldiers of WW1, the memorial belltower has become a symbol of pride for NC State students and alumni.
+On any given night, the bell tower might have a red illumination. Red bell tower lightings signify special achievements made by NC State organizations and staff as well as memorial holidays.</description>
+    </item>
+    
+  </channel>
+</rss>
