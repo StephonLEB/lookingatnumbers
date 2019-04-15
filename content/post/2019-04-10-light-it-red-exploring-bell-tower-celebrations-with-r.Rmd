@@ -116,7 +116,7 @@ light_dated %>% filter(!str_detect(year,"2019|2010")) %>% count(month,sort=TRUE)
        subtitle = "(2011-2018)")
 ```
 
-The winter months stand out as those with the most nights with a lit Belltower. Based on the numbers for the most frequently occuring occasions, it's easy to guess that Basketball is the cause. Also interesting is that there have been next to no Belltower lightings in the month of June for these 8 years. 
+The winter months stand out as those with the most nights with a lit Belltower. Based on the numbers for the most frequently occuring occasions, it's easy to guess that Basketball is the cause. Also interesting is that there have been 0 Belltower lightings in the month of July for these 8 years. 
 
 ```{r, echo=FALSE}
 light_dated %>% filter(!is.na(occasion)) %>%mutate(
