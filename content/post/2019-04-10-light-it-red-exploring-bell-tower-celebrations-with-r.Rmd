@@ -170,11 +170,22 @@ In 2011, the Belltower underwent construction to prevent water seepage through i
 
 ## What is the longest streak of Belltower lightings?
 
-```{r, echo=FALSE}
-lights_numbered  %>% mutate(streak = rle(gap)$lengths %>% sequence()) %>% filter(gap==1) %>% arrange(desc(streak)) %>% select(-numdate,-gap) %>% head(10) %>% knitr::kable()
+```{r, echo=FALSE,warning=FALSE}
+lighted <- lights %>% distinct(date,.keep_all = TRUE) %>% arrange(desc(date)) %>% mutate(numdate = as.numeric(date))
+
+for (i in 1:length(lighted$numdate)){
+     lighted$gap[i]= lighted$numdate[i] - lighted$numdate[i+1]
+ }
+
+lighted %>% arrange(date) %>% mutate(gap = ifelse(gap==0,1,gap),
+         streak = rle(gap)$lengths %>% sequence(),
+         streak = ifelse(gap==1,streak+1,streak)) %>% 
+  filter(gap==1,
+         !is.na(occasion)) %>% 
+  arrange(desc(streak)) %>% select(-numdate,-gap) %>% head(10) %>% knitr::kable()
 ```
 
-It's pretty unlikely to see the Belltower lit on consecutive days. 
+It's pretty unlikely to see the Belltower lit more than 3 consecutive days. 
 
 The NC State Belltower has a rich history and will continue to represent success for the Wolfpack nation. 
 
