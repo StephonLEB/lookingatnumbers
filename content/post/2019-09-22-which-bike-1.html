@@ -1,0 +1,137 @@
+---
+title: 'Which Bike Was It? Strava Ride Classification with R'
+author: null
+date: '2019-09-22'
+slug: which-bike-1
+categories: []
+tags: []
+description: ''
+keywords: []
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<link href="/rmarkdown-libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/datatables-binding/datatables.js"></script>
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="/rmarkdown-libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/dt-core/js/jquery.dataTables.min.js"></script>
+<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
+
+
+Every month, Google gives me a summary of how much much I’ve traveled. It’s really cool to look at, but one creepy feature about it is that it gives me a breakdown of how much I’ve traveled by medium.
+<center>
+<img src="/img/travels.png" alt="travels" />
+</center>
+<p>There are even <a href="https://indianexpress.com/article/blogs/google-maps-knows-that-i-rode-to-work-on-a-motorcycle-and-didnt-drive-down-how-3033041/">motorcycle riders’ blogs</a> where discussions have taken place about how Google know’s they’ve ridden their motorcycles as opposed to their cars.</p>
+<p>One could probably guess that Google is using GPS information from our phones using speed, roads traveled and similar factors to make estimations about how we’re getting around.</p>
+<p>I ride bikes a fair bit, and use 2 different bikes to get around. I set out to try something similar. I log my rides on Strava, it gives the athlete the option to choose which bike they rode. I happen to have 2 bikes, one for road riding and the other for gravel riding and <a href="https://en.wikipedia.org/wiki/Cyclo-cross">cyclocross</a>.</p>
+<div id="getting-my-rides-from-strava" class="section level2">
+<h2>Getting my rides from Strava</h2>
+<p>Retrieving my rides from Strava involved using their API. <a href="http://www.open-thoughts.com/2017/01/the-quantified-cyclist-analysing-strava-data-using-r/">Here’s a good post</a> detailing the steps for ‘creating an application’ to allow you to get your data. The API response is in JSON format, but the <code>jsonlite</code> package makes it easy to flatten.</p>
+<p>The max number of activities per API request is 200, so i needed to make a few requests to get a large number of rides. Combinining the two into a single data frame wasn’t trivial, as the tables had a different number of variables.</p>
+<pre class="r"><code>token &lt;- Sys.getenv(&quot;token&quot;)
+
+stuff &lt;- paste0(&quot;https://www.strava.com/api/v3/athlete/activities?access_token=&quot;,token,&quot;&amp;per_page=200&amp;page=1&quot;) %&gt;% fromJSON(flatten = TRUE)
+
+stuff2 &lt;- paste0(&quot;https://www.strava.com/api/v3/athlete/activities?access_token=&quot;,token,&quot;&amp;per_page=200&amp;page=2&quot;) %&gt;% fromJSON(flatten =TRUE)
+
+names1 &lt;- names(stuff) %&gt;% tbl_df()
+names2 &lt;- names(stuff2) %&gt;% tbl_df()
+
+names1 %&gt;% anti_join(names2) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">average_heartrate</td>
+</tr>
+<tr class="even">
+<td align="left">max_heartrate</td>
+</tr>
+</tbody>
+</table>
+<p>I used to ride with a heart rate monitor; it makes sense that these were the extra attributes from the first response.</p>
+<pre class="r"><code>rides &lt;- rbind(stuff2,stuff %&gt;% select(-average_heartrate,-max_heartrate)) %&gt;% tbl_df() %&gt;%  
+    mutate(year = year(start_date)) %&gt;% filter(type==&quot;Ride&quot;,
+                                               str_detect(gear_id,&quot;b1985937|b3994483&quot;)) %&gt;%
+    mutate(gear_id = ifelse(gear_id==&quot;b1985937&quot;,&quot;Road&quot;,&quot;Gravel&quot;),
+           gear_id = as.factor(gear_id))</code></pre>
+</div>
+<div id="exploring" class="section level2">
+<h2>Exploring</h2>
+<p>There are a lot of features of a Strava ride. I decided to focus on those that I had the most intuition around</p>
+<div id="htmlwidget-1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56"],["resource_state","name","distance","moving_time","elapsed_time","total_elevation_gain","type","workout_type","id","external_id","upload_id","start_date","start_date_local","timezone","utc_offset","start_latlng","end_latlng","location_city","location_state","location_country","start_latitude","start_longitude","achievement_count","kudos_count","comment_count","athlete_count","photo_count","trainer","commute","manual","private","visibility","flagged","gear_id","from_accepted_tag","upload_id_str","average_speed","max_speed","average_temp","average_watts","kilojoules","device_watts","has_heartrate","heartrate_opt_out","display_hide_heartrate_option","elev_high","elev_low","pr_count","total_photo_count","has_kudoed","athlete.id","athlete.resource_state","map.id","map.summary_polyline","map.resource_state","year"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Ride Attribute<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}],"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<p><br></p>
+<pre class="r"><code>library(cowplot)
+rides %&gt;% ggplot(aes(y=average_watts,x=gear_id)) + geom_boxplot() -&gt;p1
+rides %&gt;% ggplot(aes(y=max_speed,x=gear_id)) + geom_boxplot() -&gt; p2
+rides %&gt;% ggplot(aes(y=distance,x=gear_id)) + geom_boxplot() -&gt; p3
+rides %&gt;% ggplot(aes(y=average_speed,x=gear_id)) + geom_boxplot() -&gt; p4
+rides %&gt;% ggplot(aes(y=athlete_count,x=gear_id)) + geom_boxplot() -&gt; p5
+rides %&gt;% ggplot(aes(y=elapsed_time,x=gear_id)) + geom_boxplot() -&gt; p6
+
+plot_grid(p1,p2,p3,p4,p5,p6)</code></pre>
+<p><img src="/post/2019-09-22-which-bike-1_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>It looked like the most obvious separation comes the difference in average speed between the two bikes.</p>
+</div>
+<div id="building-classification-models" class="section level2">
+<h2>Building Classification Models</h2>
+<p>My goal was to come up with a model that classified my 2019 ride data, trained on my 2018 data.</p>
+<pre class="r"><code>rides_2018 &lt;- rides %&gt;% filter(year==2018)
+rides_2019 &lt;- rides %&gt;% filter(year==2019)</code></pre>
+<div id="logistic-regression" class="section level3">
+<h3>Logistic Regression</h3>
+<p>Starting from a logistic regression model using only average as the only predictor, I tried some different combinations until I landed on one using two interaction variables, one between average speed and distance and the other between average speed and athlete count.</p>
+<pre class="r"><code>glm_fit &lt;- glm(data=rides_2018, gear_id  ~ average_speed*distance + 
+               average_speed*athlete_count,family = &quot;binomial&quot;)
+
+contrasts(rides_2018$gear_id)
+
+glm_fitted &lt;- predict(glm_fit,rides_2019,type = &quot;response&quot;)
+
+logistic &lt;- data.frame(glm_fitted, rides_2019$gear_id)
+logistic &lt;- logistic %&gt;% mutate(glm_fitted = ifelse(glm_fitted&lt;.5,&quot;Gravel&quot;,&quot;Road&quot;)) 
+
+rides_2019 %&gt;% count(gear_id) </code></pre>
+<pre class="r"><code>mean(logistic$glm_fitted==logistic$rides_2019.gear_id)</code></pre>
+<pre><code>## [1] 0.7142857</code></pre>
+<p>The logistic model correctly classified <strong>71%</strong> of the rides from 2019. This is fair bit better than flipping a coin, but simply guessing that all my rides were road rides would have gotten me results almost as good.</p>
+</div>
+<div id="k-nearest-neighbors" class="section level3">
+<h3>K-Nearest Neighbors</h3>
+<p>The KNN approach doesn’t bear assumptions about the shape of the decision boundary between road rides and gravel rides. Its flexibility might yield predictions closer to the 2019 data. Here I used the predictor from the logistic model with the lowest p-value, <code>average_speed*distance</code>.</p>
+<pre class="r"><code>train &lt;- rides$year==2018
+test &lt;- rides$year==2019
+train_1 &lt;- cbind(rides$average_speed*rides$distance)[train,] %&gt;% as.data.frame()
+test_1 &lt;- cbind(rides$average_speed*rides$distance)[test,] %&gt;% as.data.frame()
+gear &lt;- rides$gear_id[train] 
+
+set.seed(100)
+
+tests &lt;- for (i in 1:30) {
+    oof &lt;- knn(train_1,test_1,gear,k=i)
+    ouch &lt;- data.frame(oof,rides_2019$gear_id) ##Choosing the best K for 2019 data
+    oops &lt;- mean(ouch$oof==ouch$rides_2019.gear_id)
+    print(oops)
+}</code></pre>
+<pre class="r"><code>knn_pred &lt;- knn(train_1,test_1,gear,k=11) 
+
+mean(knn_pred==rides_2019$gear_id)</code></pre>
+<pre><code>## [1] 0.7698413</code></pre>
+<p>The KNN with a K of 11 produced the model for the 2019 data, accurately predicting the bike I rode for <strong>77%</strong> of the data.</p>
+</div>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>These models both show that there is a predictable difference between gravel rides and road rides. Being able to select the bike you rode is a useful feature, but I find it often goes neglected. Perhaps Strava could employ a (much) better model (with an actual method to the subset selection) to choose the best default for the rider depending on their ride data.</p>
+<p>In part 2, I’ll use the map coordinates to try and improve these predictions.</p>
+</div>
