@@ -36,7 +36,7 @@ library(knitr)
 
 Retrieving my rides from Strava involved using their API. [Here's a good post](http://www.open-thoughts.com/2017/01/the-quantified-cyclist-analysing-strava-data-using-r/) detailing the steps for 'creating an application' to allow you to get your data. The API response is in JSON format, but the `jsonlite` package makes it easy to flatten.  
 
-The max number of activities per API request is 200, so i needed to make a few requests to get a large number of rides. Combinining the two into a single data frame wasn't trivial, as the tables had a different number of variables.
+The max number of activities per API request is 200, so i needed to make a couple of requests to get a large number of rides. Combinining the two into a single data frame wasn't trivial, as the tables had a different number of variables.
 
 
 ```{r, message=FALSE}
@@ -67,7 +67,7 @@ rides <- rbind(stuff2,stuff %>% select(-average_heartrate,-max_heartrate)) %>% t
 
 ## Exploring
 
-There are a lot of features of a Strava ride. I decided to focus on those that I had the most intuition around.
+There are a lot of features of a Strava ride. I decided to focus on those that I had the most intuition around: moving time, elapsed time, distance, average speed, athlete count (group rides), and max speed.
 
 ```{r echo=FALSE}
 rides %>% names() %>% tbl_df() %>% rename(`Ride Attribute`= value) %>% DT::datatable(options = list(pageLength=5))
@@ -77,7 +77,7 @@ rides %>% names() %>% tbl_df() %>% rename(`Ride Attribute`= value) %>% DT::datat
 <br>
 ```{r warning=FALSE, message=FALSE}
 library(cowplot)
-rides %>% ggplot(aes(y=average_watts,x=gear_id)) + geom_boxplot() ->p1
+rides %>% ggplot(aes(y=moving_time,x=gear_id)) + geom_boxplot() ->p1
 rides %>% ggplot(aes(y=max_speed,x=gear_id)) + geom_boxplot() -> p2
 rides %>% ggplot(aes(y=distance,x=gear_id)) + geom_boxplot() -> p3
 rides %>% ggplot(aes(y=average_speed,x=gear_id)) + geom_boxplot() -> p4
