@@ -67,7 +67,7 @@ rides <- rbind(stuff2,stuff %>% select(-average_heartrate,-max_heartrate)) %>% t
 
 ## Exploring
 
-There are a lot of features of a Strava ride. I decided to focus on those that I had the most intuition around
+There are a lot of features of a Strava ride. I decided to focus on those that I had the most intuition around.
 
 ```{r echo=FALSE}
 rides %>% names() %>% tbl_df() %>% rename(`Ride Attribute`= value) %>% DT::datatable(options = list(pageLength=5))
