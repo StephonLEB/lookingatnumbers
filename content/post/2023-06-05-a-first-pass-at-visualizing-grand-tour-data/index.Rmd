@@ -11,7 +11,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-As a cyclist, it's hard not to be aware of a particular sport that involves bike riding: <strong>triathlon.</strong> My fandom of the sport has waxed and waned over the years, but like the Tour de France, Ironman Kona is race that is hard to miss.
+As a cyclist, it's hard not to be aware of <strong>triathlon.</strong> My fandom of the sport has waxed and waned over the years, but like the Tour de France, Ironman Kona is race that is hard to miss.
 
 Kona, Hawaii has long been the home of the world championship of Ironman triathlon. It's a legendary race that (nearly) every athlete must qualify for, drawing in hundreds of committed swim-bike-runners each year.
 
