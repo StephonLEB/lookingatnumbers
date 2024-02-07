@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Web Scraping on Looking at Numbers</title>
-    <link>/categories/web-scraping/</link>
+    <link>https://lookingatnumbers.com/categories/web-scraping/</link>
     <description>Recent content in Web Scraping on Looking at Numbers</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 14 Apr 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/categories/web-scraping/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://lookingatnumbers.com/categories/web-scraping/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Light It Red: Exploring Bell Tower Celebrations with R</title>
-      <link>/post/exploring-bell-tower-celebrations-r/</link>
+      <link>https://lookingatnumbers.com/post/exploring-bell-tower-celebrations-r/</link>
       <pubDate>Sun, 14 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/exploring-bell-tower-celebrations-r/</guid>
+      <guid>https://lookingatnumbers.com/post/exploring-bell-tower-celebrations-r/</guid>
       <description>NC State Belltower Among the sights to see when taking a trip to Raleigh is NC State’s iconic Belltower. Erected as a monument to honor fallen soldiers of WW1, the memorial Belltower has become a symbol of pride for NC State students and alumni.
 On any given night, the bell tower might have a red illumination. Red bell tower lightings signify special achievements made by NC State organizations and staff as well as memorial holidays.</description>
     </item>
