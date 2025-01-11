@@ -219,7 +219,7 @@ gender %>%
 
 When looking across gender, there are some clear differences. For the men, the top bike brand was Canyon, but Cerv&eacute;lo for the women. While Cerv&eacute;lo is still the 2nd ranking brand for men, it's the 4th for women. The greatest disparities between the 2 races were in the ranking for Quintana Roo as well as BMC. 
 
-## Combing men's and women's bike counts
+## Combining men's and women's bike counts
 
 The graph above shows that the story of the bike count gets interesting once split across gender. These rankings are reflective of varying counts, so when adding up the actual counts, new trends emerge.
 
