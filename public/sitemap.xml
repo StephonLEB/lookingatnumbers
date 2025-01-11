@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://lookingatnumbers.com/post/historical-kona-bike-count/</loc>
+    <lastmod>2024-02-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://lookingatnumbers.com/post/cav-defies-odds/</loc>
     <lastmod>2021-07-19T00:00:00+00:00</lastmod>
   </url>
@@ -28,10 +33,6 @@
   </url>
   
   <url>
-    <loc>https://lookingatnumbers.com/post/2023-06-05-a-first-pass-at-visualizing-grand-tour-data/</loc>
-  </url>
-  
-  <url>
     <loc>https://lookingatnumbers.com/categories/</loc>
     <priority>0</priority>
   </url>
@@ -44,13 +45,13 @@
   
   <url>
     <loc>https://lookingatnumbers.com/</loc>
-    <lastmod>2021-07-19T00:00:00+00:00</lastmod>
+    <lastmod>2024-02-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://lookingatnumbers.com/post/</loc>
-    <lastmod>2021-07-19T00:00:00+00:00</lastmod>
+    <lastmod>2024-02-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

@@ -1,0 +1,307 @@
+---
+title: The Kona Bike Count, Then and Now
+author: null
+date: '2024-02-06'
+url: post/historical-kona-bike-count
+categories: []
+tags: []
+description: ''
+keywords: []
+editor_options: 
+  chunk_output_type: console
+---
+
+As a cyclist, it's hard not to be aware of <strong>triathlon.</strong> My fandom of the sport has waxed and waned over the years, but like the Tour de France, Ironman Kona is race that is hard to miss.
+
+Kona, Hawaii has long been the home of the world championship of Ironman triathlon. It's a legendary race that (nearly) every athlete must qualify for, drawing in hundreds of committed swim-bike-runners each year.
+
+As for the bike portion, tradition dictates that the the various bikes, wheels and componentry be tallied up each year. Triathlon is a unique cycling event in that all of the bikes can found in the same place (transition) at once. While the data is not collected in transition, it no doubt encourages speculation in doing one of the most worthwhile activities in data analysis: **counting.**
+
+Every year, a triathlon news organization releases a count for the year, briefly opines over the rankings & differences from the previous year and calls it a day until next year.
+
+As far as I can tell, this page represents the first attempt to look further than a year or two in the past for a Kona bike count analysis. I did some digging, and created a [dataset](https://docs.google.com/spreadsheets/d/19BV7Gc3t4G1sneV7eke3PWODBTQhheDygfFUhAjiV6k/edit#gid=1252346763) of bike count tallies ranging as far back as 2012. I've chosen to limit my focus on the bikes (frames). 
+
+## Trends from 2012&ndash;2022
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(sysfonts)
+library(showtext)
+library(ggpattern)
+font_add_google("Titillium Web","Titillium Web")
+showtext_auto()
+
+bikes <- read_csv("bike-count.csv") %>% 
+    clean_names() %>% 
+    group_by(year) %>%
+    arrange(desc(count)) %>%
+    mutate(num = row_number(),
+           brand = str_trim(brand),
+           brand = if_else(brand=="Cervelo","Cervélo",brand)) %>%
+    filter(num <11) %>% ungroup()
+
+bikes_22 <- bikes %>% filter(year == 2022) %>%
+  mutate(brand = if_else(brand == "Quintana Roo","Quintana\n  Roo",brand))
+
+bikes_12 <- bikes %>% filter(year == 2012)
+
+bikes_12_not_22 <- bikes_12 %>%
+    anti_join(bikes_22,
+              by = "brand")
+
+bikes_15_ceepo <- bikes %>% filter(year==2015,brand == "Ceepo")
+
+bikes_16_cannondale <- bikes %>% filter(year==2016,brand == "Cannondale")
+    
+bikes_kestrel <- bikes %>% filter(brand == "Kestrel")
+
+
+```
+If you're familiar with triathlon, it should be no surprise to see Cerv&eacute;lo near the top, but it's astonishing just long they've been the most popular bike brand at Kona.
+
+Cerv&eacute;lo was a pioneer in aerodynamic bicycle design in the early 2000s, and has carried that reputation into recent times.
+
+```{r trend graph, echo=FALSE, fig.align='center',fig.width= 8.5,fig.height = 6}
+
+bikes %>% 
+    ggplot(aes(year,num,color = brand)) +
+    geom_line(size = 1.25) + 
+    geom_point(size = 2) +
+    ### labels
+    geom_text(inherit.aes = F,
+              mapping = aes(year,num,label = brand),
+              data = bikes_22,
+              hjust=-.2,
+              family = "Titillium Web",
+              size = 4.5) + 
+    geom_text(inherit.aes = F,
+              mapping = aes(year,num,label = brand),
+              data = bikes_16_cannondale,
+              vjust=1.5,
+              family = "Titillium Web") +
+    geom_text(inherit.aes = F,
+              mapping = aes(year,num,label = brand),
+              data = bikes_15_ceepo,
+              hjust=-.2,
+              family = "Titillium Web") +
+    geom_text(inherit.aes = F,
+              mapping = aes(year,num,label = brand),
+              data = bikes_kestrel,
+              hjust=-.2,
+              family = "Titillium Web") +
+    ### scales
+    scale_y_reverse(breaks = c(1:10)) + 
+    scale_x_continuous(breaks = c(2012:2022)) +
+    expand_limits(x = c(2023)) +
+    ### styling
+    theme(text = element_text(family = "Titillium Web"),
+          plot.title = element_text(size=18),
+          plot.caption = element_text(hjust=1),
+          panel.background = element_rect(fill = "white"),
+          axis.text.x = element_text(size = 13),
+          axis.text.y = element_text(size = 14),
+          axis.ticks = element_blank(),
+          axis.title = element_text(hjust=1,
+                                    size = 13),
+          legend.position = "none") + 
+    ### labels
+    labs(x = NULL,
+         y = "Rank",
+         title = "IMWC Kona Bike Count Rankings",
+         subtitle = "2012 — 2022 (no race held 2020, 2021)",
+         caption = "Graph: Stephon Beaufort") +
+    scale_color_manual(values = c("Argon 18" = "#e50019",
+                                "BMC" = "#235789",
+                                "Cannondale" = "#8DC73F",
+                                "Canyon" = "#c1c1c1",
+                                "Ceepo" = "#020100",
+                                "Cervélo" = "#dc1405",
+                                "Felt" = "#49ADB4",
+                                "Giant" = "#0F258B",
+                                "Kestrel" = "black",
+                                "Quintana Roo" = "#E3432D",
+                                "Scott" = "#FFF334",
+                                "Specialized" = "#E6432D",
+                                "Trek" = "#313131"))
+
+```
+
+
+Over the years preceding 2023, the same few brands have occupied the top 4 positions. Like Cerv&eacute;lo, Felt is another brand well known in the triathlon world. Trek and Specialized produce bikes in all categories, so it's not hard to imagine why they'd be able to so consistently make it into this list.
+
+In the lower positions of the top 10 brands, there is much more movement. Scott and Quintana Roo in particular have seen the highs and lows of this list, with QR making an impressive return to prevalence over recent years.
+
+One brand whose rise can't be ignored is that of Canyon. The direct-to-consumer brand made its entrance into the top 10 in 2017 and has risen to 2nd in a few short years. At the end of 2022, it was easy to bet that Canyon would top Cerv&eacute;lo in 2023.
+
+## 2023&mdash;When Everything Changed
+
+Kona still happened in 2023, but only women competed. The men's race was held much further away, in Nice, France. This separation of the championship was a first, but it didn't stop anyone from counting the bikes. It does make things more interesting though; now we ask the question: **How do the trends we observe hold across gender?**
+
+```{r slop, echo = F, message = F, warning = F,fig.align='center',fig.width= 8.5,fig.height = 6}
+men_2024 <- read.csv("2024-men.csv") 
+women_2024 <- read.csv("2024-women.csv") 
+
+gender <- full_join(men_2024,women_2024, by = "brand") %>%
+    rename(men = count.x,
+           women = count.y) %>%
+    mutate(men = replace_na(men,0),
+           women = replace_na(women,0),
+           brand = if_else(brand=="Cervelo","Cervélo",brand)) %>%
+    
+    pivot_longer(cols = c(men,women),names_to = "gender") %>%
+    group_by(gender) %>%
+    arrange(desc(value)) %>%
+    mutate(rank = row_number(),
+           brand = str_trim(brand),
+           brand = if_else(brand == "Quintana Roo","Quintana\n  Roo",brand),
+           brand = if_else(brand == "Giant/Liv/CADEX","Giant/Liv\n/CADEX",brand),
+           num_label = case_when(
+               gender == "men" ~ 1,
+               gender == "women" ~ 2
+           )) %>%
+    filter(rank <= 10)
+gender %>%
+    ggplot(aes(num_label,
+               rank,
+               group = brand,
+               label = brand,
+               color = brand)) +
+    geom_point(size = 2) +
+    geom_line(size = 1.25) +
+    geom_text(inherit.aes = F,
+              mapping = aes(num_label,rank, label = brand),
+              data = gender %>% filter(gender == "women"),
+              hjust = -.15,
+              family = "Titillium Web",
+              size = 4.5) + 
+    geom_text(inherit.aes = F,
+              mapping = aes(num_label,rank, label = brand),
+              data = gender %>% filter(gender == "men",rank == 9),
+              hjust = -.15,
+              family = "Titillium Web",
+              size = 4.5) + 
+    scale_y_reverse(breaks = seq(1,10),
+                    sec.axis = dup_axis(name = NULL)) +
+    scale_color_manual(values = c("Argon 18" = "#e50019",
+                                  "BMC" = "#235789",
+                                  "Cannondale" = "#8DC73F",
+                                  "Canyon" = "#c1c1c1",
+                                  "Ceepo" = "#020100",
+                                  "Cervélo" = "#dc1405",
+                                  "Felt" = "#49ADB4",
+                                  "Giant" = "#0F258B",
+                                  "Kestrel" = "black",
+                                  "Quintana Roo" = "#E3432D",
+                                  "Scott" = "#FFF334",
+                                  "Specialized" = "#E6432D",
+                                  "Trek" = "#313131",
+                                  "Ventum" = "black")) + 
+    theme(text = element_text(family = "Titillium Web"),
+          plot.title = element_text(size=18),
+          plot.caption = element_text(hjust=1),
+          panel.background = element_rect(fill = "white"),
+          axis.text.x = element_text(size = 13),
+          axis.text.y = element_text(size = 14),
+          axis.ticks = element_blank(),
+          axis.title = element_text(hjust=1,
+                                    size = 13),
+          legend.position = "none") + 
+    scale_x_continuous(breaks = c(1,2),
+                       labels = c("Men","Women")) + 
+    labs(title = "Difference between men and women's bike count rankings",
+         subtitle = "IMWC Nice vs. IMWC Kona in 2023",
+         caption = "Graph: Stephon Beaufort",
+         y = "Rank",
+         x = NULL) + 
+    expand_limits(x = 2.1)
+```
+
+When looking across gender, there are some clear differences. For the men, the top bike brand was Canyon, but Cerv&eacute;lo for the women. While Cerv&eacute;lo is still the 2nd ranking brand for men, it's the 4th for women. The greatest disparities between the 2 races were in the ranking for Quintana Roo as well as BMC. 
+
+## Combing men's and women's bike counts
+
+The graph above shows that the story of the bike count gets interesting once split across gender. These rankings are reflective of varying counts, so when adding up the actual counts, new trends emerge.
+
+```{r warning = F, echo = F, message=F,fig.align='center',fig.width= 8.5,fig.height = 6}
+top_ten <- full_join(men_2024,women_2024, by = "brand") %>% as_tibble() %>%
+    rename(men = count.x,
+           women = count.y) %>%
+    mutate(men = replace_na(men,0),
+           women = replace_na(women,0),
+           total = men + women,
+           brand = if_else(brand=="Cervelo","Cervélo",brand)) %>%
+    arrange(desc(total)) %>%
+    head(10)
+
+
+
+full_join(men_2024,women_2024, by = "brand") %>%
+    rename(men = count.x,
+           women = count.y) %>%
+    mutate(men = replace_na(men,0),
+           women = replace_na(women,0),
+           brand = if_else(brand=="Cervelo","Cervélo",brand)) %>%
+    
+    pivot_longer(cols = c(men,women),names_to = "gender") %>%
+    group_by(gender) %>%
+    arrange(desc(value)) %>%
+    mutate(rank = row_number(),
+           brand = str_trim(brand),
+           num_label = case_when(
+               gender == "men" ~ 1,
+               gender == "women" ~ 2
+           )) %>% ungroup() %>%
+    group_by(brand) %>% mutate(total = sum(value)) %>% ungroup() %>%
+    filter(brand %in% top_ten$brand) %>%
+    ggplot(aes(fct_reorder(brand,value),
+               value,
+               pattern = gender,
+               fill = brand)) + 
+    geom_col_pattern(aes(pattern_density = str_to_title(gender)),
+                     pattern = 'stripe',
+                     color = 'black',
+                     pattern_fill = 'white',
+                     pattern_color = 'white',
+                     pattern_spacing = .01) +
+    scale_pattern_density_manual(values = c(0,0.2) %>% rev()) + 
+    coord_flip() + 
+    scale_fill_manual(values = c("Argon 18" = "#e50019",
+                                  "BMC" = "#235789",
+                                  "Cannondale" = "#8DC73F",
+                                  "Canyon" = "#c1c1c1",
+                                  "Ceepo" = "#020100",
+                                  "Cervélo" = "#dc1405",
+                                  "Felt" = "#49ADB4",
+                                  "Giant" = "#0F258B",
+                                  "Kestrel" = "black",
+                                  "Quintana Roo" = "#E3432D",
+                                  "Scott" = "#FFF334",
+                                  "Specialized" = "#E6432D",
+                                  "Trek" = "#313131",
+                                  "Ventum" = "black")) + 
+    theme(text = element_text(family = "Titillium Web"),
+          plot.title = element_text(size=18),
+          plot.caption = element_text(hjust=1),
+          panel.background = element_rect(fill = "white"),
+          axis.text.x = element_text(size = 13),
+          axis.text.y = element_text(size = 14),
+          axis.ticks = element_blank(),
+          axis.title = element_text(hjust=1,
+                                    size = 13),
+          legend.position = "bottom",
+          legend.justification = "right") + 
+    guides(fill = "none") + 
+    labs(y = "Total bike count",
+         x = NULL,
+         title = "IMWC Nice + IMWC Kona Bike Brand Counts",
+         subtitle = "Cervélo reigns in a combined bike count",
+         caption = "Graph: Stephon Beaufort",
+         pattern_density = "")
+```
+
+It turns out that in a combined count, the overwhelming popularity of Cerv&eacute;lo among women carries the brand to the top spot. Similarly for Quintana Roo, a combined count actually brings them to 5th place, where they have never been since 2012.
+
+## Keep Counting
+
+The bike counts that take place at the Ironman World Championships every year are no doubt interesting. It's nice to see whether your favorite bike frame, wheels or components are being used by the world's best. While triathletes aren't exactly representative of the market for cycling products, I think brands would be wise to stay on top of the data and trends that come out of the bike count.

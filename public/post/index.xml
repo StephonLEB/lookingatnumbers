@@ -6,10 +6,20 @@
     <description>Recent content in Posts on Looking at Numbers</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 19 Jul 2021 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 06 Feb 2024 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://lookingatnumbers.com/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The Kona Bike Count, Then and Now</title>
+      <link>https://lookingatnumbers.com/post/historical-kona-bike-count/</link>
+      <pubDate>Tue, 06 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://lookingatnumbers.com/post/historical-kona-bike-count/</guid>
+      <description>As a cyclist, it’s hard not to be aware of triathlon. My fandom of the sport has waxed and waned over the years, but like the Tour de France, Ironman Kona is race that is hard to miss.
+Kona, Hawaii has long been the home of the world championship of Ironman triathlon. It’s a legendary race that (nearly) every athlete must qualify for, drawing in hundreds of committed swim-bike-runners each year.</description>
+    </item>
     
     <item>
       <title>The Odds Cav Defies</title>
@@ -56,15 +66,6 @@ On any given night, the bell tower might have a red illumination. Red bell tower
       
       <guid>https://lookingatnumbers.com/post/wow/</guid>
       <description>Blogging has become common practice among businesses looking to connect with their customers. Behind every blogging operation though is a team of authors full of industry knowhow. Giving writers a way to track their performance can compel them to write better and more often. Using R and Google Analytics, I was able to aggregate blog traffic for my coworkers. Google Analytics is a commonly used tool for tracking site usage, and the googleAnalyticsR package is a great API wrapper for getting its data into R.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://lookingatnumbers.com/post/2023-06-05-a-first-pass-at-visualizing-grand-tour-data/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://lookingatnumbers.com/post/2023-06-05-a-first-pass-at-visualizing-grand-tour-data/</guid>
-      <description></description>
     </item>
     
   </channel>

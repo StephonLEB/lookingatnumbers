@@ -1,0 +1,106 @@
+---
+title: Finding Your Raleigh Local Bike Shop
+date: '2025-01-01'
+editor_options: 
+  chunk_output_type: console
+---
+
+There are few more common adages heard as cyclist than <strong>'support your local bike shop.'</strong> In a world where riders can get the parts they need from Amazon the same day, bike shops are still invaluable resources to anyone interesting in riding a bike. Professional mechanics hold a wealth of practical expertise that can't be reduced to a forum thread. Shops are hubs for riders and enthusiasts to form community and share resources & knowledge. It's worth it to know and support the bicycle shop in your neck of the woods.
+
+As a resident of central Raleigh, close to a number of shops, I've thought to myself, <q>actually, I don't know what my local bike shop (LBS) is!</q> So I sought to find out.
+
+## The bike shop closest to you in Raleigh
+
+The shaded areas show what your local bike shop is, from wherever in town.
+
+```{r setup, echo = FALSE, message = FALSE, warning= FALSE}
+library(tidyverse)
+library(sf)
+library(showtext)
+font_add_google("Poppins","Poppins")
+showtext_auto()
+
+sf::sf_use_s2(FALSE)
+
+zones <- read_sf("zones.geojson")
+streets <- read_sf("streets.geojson")
+
+raleigh <- zones %>% st_union()
+
+majors <- streets %>% filter(SPEED >= 35) %>%
+    st_intersection(raleigh)
+
+
+
+```
+
+```{r transformations, echo = FALSE, message= FALSE, warning = FALSE}
+
+
+
+bell_lap <- tibble(name = "Bell Lap\nCycleworks", x = -78.67814110525477, y= 35.87380881463415)
+
+occp <- tibble(name = "Oak City\nCycling",x=-78.63447902066672,y=35.790028113814365)
+
+tbl <- tibble(name = "The Bike\nLibrary",x=-78.67756250404803,y=35.767646400232984)
+
+trek_holly <- tibble(name = "Trek\nHolly Park",x=-78.62081266603299,y=35.82612953930017)
+
+bike_chain <- tibble(name = "Bicycle Chain",x=-78.75270853649116,y=35.8961415711698)
+
+contes <- tibble(name = "Conte's",x=-78.68429079103863,y=35.80611278863103)
+
+trek_north <- tibble(name = "Trek\nNorth Raleigh",x=-78.59132343649108,y=35.91034226706531)
+
+tlc <- tibble(name = "TLC\nFor Bikes",x=-78.62050586822163,y=35.89782815560901)
+
+franks <- tibble(name = "Franks's Cyclery",x = -78.71373653973671,y = 35.90133962165074)
+
+johns <- tibble(name = "John Bicycles",x = -78.60438822965352,y = 35.8533526606378)
+
+shops <- bind_rows(bell_lap ,occp,tbl,trek_holly,bike_chain,contes,trek_north,tlc,franks,johns)
+
+shops <- shops %>%
+    st_as_sf(coords = c("x","y"),crs=4236) %>%
+    st_transform(crs = st_crs(raleigh))
+
+voronoi <- shops %>%
+    st_geometry() %>%
+    st_union() %>%
+    st_voronoi(envelope = st_geometry(raleigh)) %>%
+    st_collection_extract(type = "POLYGON") %>% 
+    st_sf() %>%
+    st_intersection(raleigh) %>%
+    st_join(shops)
+
+
+```
+
+
+```{r graph, echo = FALSE, warning = FALSE, message = FALSE, fig.align="center",fig.height=7}
+
+#plot
+
+ggplot() +
+    geom_sf(data = voronoi,size = .05,alpha = .2, aes(fill = name)) + 
+    geom_sf(data = majors, alpha = .15) + 
+    geom_sf(data = raleigh,size = .3, fill = NA) + 
+    #geom_sf(data = shops) + 
+    geom_sf_text(data = shops,mapping = aes(label = name),
+                 family = "Poppins") +
+    labs(caption = "Map: Stephon Beaufort") + 
+    theme_void() + 
+    theme(legend.position = "none",
+          text = element_text(family = "Poppins"))
+
+```
+
+
+There are some things that stick out to me:
+
+* North Raleigh has a lot of 'coverage'. If you live or ride northwest of the Raleigh's beltline, you're never too far from a shop in case of an emergency.
+* (South)east Raleigh seems under-served. Oak City Cycling and John Bicycles occupy a large boundary, but the furthest edges are quite far away.
+
+This map doesn't go as far as to account for shops outside of Raleigh's border, but it's a decent representation of the landscape. Bike shop owners might even consider this visual when thinking about the customers they can and do reach. The boundaries are also 'as the crow flies'. How people get to these places is also important.
+
+Any surprises? Feel free to [reach out](https://www.linkedin.com/in/stephon-beaufort-299b05111/).
